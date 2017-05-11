@@ -29,6 +29,7 @@ RTC_PCF8523 rtc;
 // To save memory, use global data point variables.
 DateTime now;
 char formatted_timestamp[] = "0000-00-00T00:00:00";
+char* data_file_entry_buffer = (char*) malloc(sizeof(char) * 50);
 unsigned int latest_temperature;
 
 
@@ -67,6 +68,19 @@ void update_formatted_timestamp() {
         now.month(), now.day(), now.hour(), now.minute(), now.second());
 }
 
+void take_reading() {
+    now = rtc.now();
+    // TODO: Take a temperature reading
+}
+
+void save_reading_to_card() {
+    if (data_file) {
+        update_formatted_timestamp();
+        sprintf(data_file_entry_buffer, "%u,%s", latest_temperature,
+            formatted_timestamp);
+        data_file.println(data_file_entry_buffer);
+    }
+}
 
 
 // Main Methods
@@ -140,6 +154,9 @@ void setup() {
         log_error("Failed.");
     }
 
+    // PRINT DATA FILE CSV HEADERS
+    data_file.println("Timestamp,Temperature");
+
     // Finished everything!
     now = rtc.now();
 
@@ -149,7 +166,12 @@ void setup() {
 }
 
 void loop() {
-    // Main Loop
-    // TODO: Main Loop
+    // TODO: (Optional) Exit sleep
+
+    take_reading();
+    save_reading_to_card();
+
+    // TODO: (Optional) Enter sleep
+
     delay(1000);
 }
