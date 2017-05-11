@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Fake Frog                                                                   *
+ * An Arduino-based project to build a frog-shaped temperature logger.         *
+ * Author: David Lougheed. Copyright 2017.                                     *
+ ******************************************************************************/
+
 // Includes
 #include <Arduino.h>
 #include <Wire.h>
@@ -67,6 +73,9 @@ void log_error(const char* msg, bool with_newline = true) {
     log(msg, with_newline);
     while (true); // Loop forever
 }
+
+
+// Data Methods
 
 void update_formatted_timestamp() {
     sprintf(formatted_timestamp, "%u-%u-%uT%u:%u:%u", now.year(),
