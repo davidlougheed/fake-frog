@@ -48,8 +48,11 @@ void log(const char* msg, bool with_newline = true) {
 
     if (FILE_LOGGING) {
         if (!log_file) {
-            if (with_newline) Serial.println(msg);
-            else Serial.print(msg);
+            if (with_newline) {
+                log_file.println(msg);
+            } else {
+                log_file.print(msg);
+            }
         }
     }
 }
