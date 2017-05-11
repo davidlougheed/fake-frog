@@ -43,8 +43,11 @@ void log(const char* msg, bool with_newline = true) {
             serial_logging_started = true;
         }
 
-        if (with_newline) Serial.println(msg);
-        else Serial.print(msg);
+        if (with_newline) {
+            Serial.println(msg);
+        } else {
+            Serial.print(msg);
+        }
     }
 
     if (FILE_LOGGING) {
@@ -60,7 +63,7 @@ void log(const char* msg, bool with_newline = true) {
 
 void log_error(const char* msg, bool with_newline = true) {
     log(msg, with_newline);
-    while(1); // Loop forever
+    while (true); // Loop forever
 }
 
 void update_formatted_timestamp() {
@@ -92,7 +95,7 @@ void setup() {
     log("Initializing SD card... ", false);
     pinMode(SD_CARD_PIN, OUTPUT);
     if (!SD.begin()) {
-        log("Failed.");
+        log_error("Failed.");
     }
     log("Done.");
 
@@ -113,7 +116,6 @@ void setup() {
                 break;
             }
         }
-
         if (log_file) {
             log("Done.");
         } else {
@@ -147,7 +149,6 @@ void setup() {
             break;
         }
     }
-
     if (data_file) {
         log("Done.");
     } else {
@@ -159,7 +160,6 @@ void setup() {
 
     // Finished everything!
     now = rtc.now();
-
     update_formatted_timestamp();
     log("Data logger started at ", false);
     log(formatted_timestamp);
