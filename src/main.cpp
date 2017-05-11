@@ -32,6 +32,8 @@ char formatted_timestamp[] = "0000-00-00T00:00:00";
 char* data_file_entry_buffer = (char*) malloc(sizeof(char) * 50);
 unsigned int latest_temperature;
 
+uint16_t i; // 16-bit iterator
+
 
 // Utility Methods
 
@@ -103,7 +105,7 @@ void setup() {
     if (FILE_LOGGING) {
         log("Creating log file... ", false);
         char log_file_name[] = "log_file_000.txt";
-        for (uint16_t i = 0; i < MAX_LOG_FILES; i++) {
+        for (i = 0; i < MAX_LOG_FILES; i++) {
             // Increment until we can find a log file slot.
 
             // Need to add 32 to get ASCII number characters.
@@ -136,7 +138,7 @@ void setup() {
     // SET UP DATA FILE
     log("Creating data file...");
     char data_file_name[] = "data_file_000.csv";
-    for (uint16_t i = 0; i < MAX_DATA_FILES; i++) {
+    for (i = 0; i < MAX_DATA_FILES; i++) {
         // Increment until we can find a data file slot.
 
         // Need to add 32 to get ASCII number characters.
