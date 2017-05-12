@@ -1,36 +1,43 @@
-/*******************************************************************************
- * Fake Frog                                                                   *
- * An Arduino-based project to build a frog-shaped temperature logger.         *
- * Author: David Lougheed. Copyright 2017.                                     *
+/******************************************************************************
+ * Fake Frog                                                                  *
+ * An Arduino-based project to build a frog-shaped temperature logger.        *
+ * Author: David Lougheed. Copyright 2017.                                    *
  ******************************************************************************/
 
+
 // Includes
+
 #include <Arduino.h>
 #include <Wire.h>
+#include <LiquidCrystal.h>
+
 #include <SD.h>
 #include <RTClib.h>
 
 
 // Compile-Time Settings
-#define SERIAL_LOGGING  1
-#define FILE_LOGGING    1
+
+#define SERIAL_LOGGING  true
+#define FILE_LOGGING    true
 
 
 // Compile-Time Constants
 #define SD_CARD_PIN     10
 #define RTC_PIN_1       4
 #define RTC_PIN_2       5
+#define RTC_TYPE        RTC_PCF8523
 #define MAX_LOG_FILES   1000
 #define MAX_DATA_FILES  1000
 
 
 // Globals
+
 bool serial_logging_started = false;
 
 File log_file;
 File data_file;
 
-RTC_PCF8523 rtc;
+RTC_TYPE rtc;
 
 // To save memory, use global data point variables.
 DateTime now;
@@ -43,6 +50,7 @@ uint16_t i; // 16-bit iterator
 
 // Utility Methods
 
+// Log a generic message.
 void log(const char* msg, bool with_newline = true) {
     if (SERIAL_LOGGING) {
         if(!serial_logging_started) {
@@ -69,6 +77,7 @@ void log(const char* msg, bool with_newline = true) {
     }
 }
 
+// Log an error message. Uses standard log method, then hangs forever.
 void log_error(const char* msg, bool with_newline = true) {
     log(msg, with_newline);
     while (true); // Loop forever
@@ -77,6 +86,7 @@ void log_error(const char* msg, bool with_newline = true) {
 
 // Data Methods
 
+// Update the global formatted timestamp string with the contents of 'now'.
 void update_formatted_timestamp() {
     sprintf(formatted_timestamp, "%u-%u-%uT%u:%u:%u", now.year(),
         now.month(), now.day(), now.hour(), now.minute(), now.second());
