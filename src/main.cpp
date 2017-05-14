@@ -19,13 +19,29 @@
 
 #define SERIAL_LOGGING  true
 #define FILE_LOGGING    true
+#define DISPLAY_ENABLED true
 
 
-// Compile-Time Constants
+// Hardware Settings
+
 #define SD_CARD_PIN     10
 #define RTC_PIN_1       4
 #define RTC_PIN_2       5
+#define LCD_PIN_RS      6
+#define LCD_PIN_EN      7
+#define LCD_PIN_DB4     8
+#define LCD_PIN_DB5     9
+#define LCD_PIN_DB6     11
+#define LCD_PIN_DB7     12
+
+#define LCD_ROWS        2
+#define LCD_COLUMNS     16
+
 #define RTC_TYPE        RTC_PCF8523
+
+
+// Other Compile-Time Constants
+
 #define MAX_LOG_FILES   1000
 #define MAX_DATA_FILES  1000
 
@@ -39,11 +55,21 @@ File data_file;
 
 RTC_TYPE rtc;
 
+LiquidCrystal* lcd;
+
 // To save memory, use global data point variables.
 DateTime now;
 char formatted_timestamp[] = "0000-00-00T00:00:00";
 char* data_file_entry_buffer = (char*) malloc(sizeof(char) * 50);
 unsigned int latest_temperature;
+
+/*
+    DISPLAY MODES (ALL WITH LOGGING)
+    0: Idle
+    1: Information (clock, space usage)
+    2: RTC Editor
+*/
+uint8_t display_mode = 0;
 
 uint16_t i; // 16-bit iterator
 
@@ -81,6 +107,29 @@ void log(const char* msg, bool with_newline = true) {
 void log_error(const char* msg, bool with_newline = true) {
     log(msg, with_newline);
     while (true); // Loop forever
+}
+
+void update_screen() {
+    if (DISPLAY_ENABLED && lcd) {
+        lcd->clear();
+
+        switch (display_mode) {
+            case 1:
+                lcd->print("TBD");
+                break;
+            case 2:
+                lcd->print("TBD");
+                break;
+            case 0:
+            default:
+                break;
+        }
+    }
+}
+
+void switch_display_mode(uint8_t m) {
+    display_mode = m;
+    update_screen();
 }
 
 
@@ -160,7 +209,7 @@ void setup() {
     for (i = 0; i < MAX_DATA_FILES; i++) {
         // Increment until we can find a data file slot.
 
-        // Need to add 32 to get ASCII number characters.
+        // Need to add 32 to get ASCII digit characters.
         data_file_name[6] = i / 100 + 32;
         data_file_name[7] = i / 10 + 32;
         data_file_name[8] = i % 10 + 32;
@@ -178,6 +227,13 @@ void setup() {
 
     // PRINT DATA FILE CSV HEADERS
     data_file.println("Timestamp,Temperature");
+
+    // SET UP LCD
+    if (DISPLAY_ENABLED) {
+        lcd = new LiquidCrystal(LCD_PIN_RS, LCD_PIN_EN, LCD_PIN_DB4,
+            LCD_PIN_DB5, LCD_PIN_DB6, LCD_PIN_DB7);
+        lcd->begin(LCD_COLUMNS, LCD_ROWS);
+    }
 
     // Finished everything!
     now = rtc.now();
