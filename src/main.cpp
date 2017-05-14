@@ -48,7 +48,7 @@
 #define LCD_ROWS                2
 #define LCD_COLUMNS             16
 
-#define RTC_TYPE        RTC_PCF8523
+#define RTC_TYPE                RTC_PCF8523
 
 
 // Other Compile-Time Constants
@@ -170,7 +170,7 @@ void take_reading() {
     latest_temperature = THERMISTOR_SERIES_RES
         / (1023 / (latest_temperature / NUM_SAMPLES) - 1); // Resistance
     latest_temperature = 1 / ((log(latest_temperature / THERMISTOR_RES_NOM)
-        / THERMISTOR_B_COEFF) + 1/(THERMISTOR_TEMP_NOM + 273.15)) - 273.15;
+        / THERMISTOR_B_COEFF) + 1 / (THERMISTOR_TEMP_NOM + 273.15)) - 273.15;
 }
 
 void save_reading_to_card() {
