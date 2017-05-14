@@ -200,7 +200,7 @@ void setup() {
     // SET UP LOG FILE
     if (FILE_LOGGING) {
         log("Creating log file... ", false);
-        char log_file_name[] = "log_file_000.txt";
+        char log_file_name[] = "log_000.txt";
         for (i = 0; i < MAX_LOG_FILES; i++) {
             // Increment until we can find a log file slot.
 
@@ -233,7 +233,7 @@ void setup() {
 
     // SET UP DATA FILE
     log("Creating data file...");
-    char data_file_name[] = "data_file_000.csv";
+    char data_file_name[] = "data_000.csv";
     for (i = 0; i < MAX_DATA_FILES; i++) {
         // Increment until we can find a data file slot.
 

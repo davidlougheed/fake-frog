@@ -6,7 +6,7 @@ An Arduino-based project to build a frog-shaped temperature logger.
 
 Upon startup, the logger will create one or two files: a data file and
 (optionally) a log file.  The default file name formats for these are
-`data_file_###.csv` and `log_file_###.txt`, where `###` is a number (meaning
+`data_###.csv` and `log_###.txt`, where `###` is a number (meaning
 there are can be up to 1000 log files and data files created).
 
 ### Log File
@@ -22,7 +22,7 @@ The data file is in CSV format. In general, a data file will look like this:
 
 ```
 Timestamp,Temperature
-0000-00-00T00:00:00,#####.#####
-0000-00-00T00:00:00,#####.#####
+0000-00-00T00:00:00,##.##
+0000-00-00T00:00:00,##.##
 ...
 ```
