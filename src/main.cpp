@@ -72,6 +72,7 @@ LiquidCrystal* lcd;
 DateTime now;
 char formatted_timestamp[] = "0000-00-00T00:00:00";
 char* data_file_entry_buffer = (char*) malloc(sizeof(char) * 50);
+double latest_resistance;
 double latest_temperature;
 
 /*
@@ -153,24 +154,30 @@ void update_formatted_timestamp() {
         now.month(), now.day(), now.hour(), now.minute(), now.second());
 }
 
+double resistance_to_temperature(double resistance) {
+    // Formula: T = 1/(1/B * ln(R/R_0) + (1/T0)) - 273.15 (celcius)
+    return 1 / ((log(resistance / THERMISTOR_RES_NOM) / THERMISTOR_B_COEFF) + 1
+        / (THERMISTOR_TEMP_NOM + 273.15)) - 273.15;
+}
+
 void take_reading() {
     now = rtc.now();
 
-    latest_temperature = 0;
+    latest_resistance = 0;
 
     for (i = 0; i < NUM_SAMPLES; i++) {
-        latest_temperature += (double) analogRead(THERMISTOR_PIN);
+        latest_resistance += (double) analogRead(THERMISTOR_PIN);
         delay(SAMPLE_DELAY);
     }
 
-    // Formulas: T = 1/(1/B * ln(R/R_0) + (1/T0)) - 273.15 (celcius)
-    //           R = sr / (1023 / mean_of_samples - 1)
+    // Formulas: R = sr / (1023 / mean_of_samples - 1)
     //           sr = thermistor series resistance
 
-    latest_temperature = THERMISTOR_SERIES_RES
-        / (1023 / (latest_temperature / NUM_SAMPLES) - 1); // Resistance
-    latest_temperature = 1 / ((log(latest_temperature / THERMISTOR_RES_NOM)
-        / THERMISTOR_B_COEFF) + 1 / (THERMISTOR_TEMP_NOM + 273.15)) - 273.15;
+    latest_resistance = THERMISTOR_SERIES_RES
+        / (1023 / (latest_resistance / NUM_SAMPLES) - 1); // Resistance
+    latest_temperature = resistance_to_temperature(latest_resistance);
+
+    // TODO: Error calculations
 }
 
 void save_reading_to_card() {
