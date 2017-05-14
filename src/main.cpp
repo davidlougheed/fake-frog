@@ -5,6 +5,9 @@
  ******************************************************************************/
 
 
+#define VERSION "0.1.0"
+
+
 // Includes
 
 #include <Arduino.h>
@@ -270,7 +273,9 @@ void setup() {
     now = rtc.now();
     update_formatted_timestamp();
     log("Data logger started at ", false);
-    log(formatted_timestamp);
+    log(formatted_timestamp, false);
+    log(". Software version: ", false);
+    log(VERSION);
 }
 
 void loop() {
