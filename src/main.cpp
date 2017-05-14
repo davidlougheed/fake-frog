@@ -101,12 +101,13 @@ void log(const char* msg, bool with_newline = true) {
     }
 
     if (FILE_LOGGING) {
-        if (!log_file) {
+        if (log_file) {
             if (with_newline) {
                 log_file.println(msg);
             } else {
                 log_file.print(msg);
             }
+            log_file.flush();
         }
     }
 }
@@ -175,6 +176,7 @@ void save_reading_to_card() {
         sprintf(data_file_entry_buffer, "%.2f,%s", latest_temperature,
             formatted_timestamp);
         data_file.println(data_file_entry_buffer);
+        data_file.flush();
     }
 }
 
@@ -255,6 +257,7 @@ void setup() {
 
     // PRINT DATA FILE CSV HEADERS
     data_file.println("Timestamp,Temperature");
+    data_file.flush();
 
     // SET UP LCD
     if (DISPLAY_ENABLED) {
