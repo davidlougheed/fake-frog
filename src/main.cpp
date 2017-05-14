@@ -17,33 +17,41 @@
 
 // Compile-Time Settings
 
-#define SERIAL_LOGGING  true
-#define FILE_LOGGING    true
-#define DISPLAY_ENABLED true
+#define SERIAL_LOGGING          true    // Log to the serial display for debug.
+#define FILE_LOGGING            true    // Log to file on SD card. (recommended)
+#define DISPLAY_ENABLED         true    // Show menus and information on an LCD.
+#define NUM_SAMPLES             10      // Samples get averaged to reduce noise.
+#define SAMPLE_DELAY            10      // Milliseconds between samples.
 
 
 // Hardware Settings
 
-#define SD_CARD_PIN     10
-#define RTC_PIN_1       4
-#define RTC_PIN_2       5
-#define LCD_PIN_RS      6
-#define LCD_PIN_EN      7
-#define LCD_PIN_DB4     8
-#define LCD_PIN_DB5     9
-#define LCD_PIN_DB6     11
-#define LCD_PIN_DB7     12
+#define THERMISTOR_PIN          A0
+#define THERMISTOR_SERIES_RES   10000
+#define THERMISTOR_RES_NOM      10000   // Nominal resistance, R0.
+#define THERMISTOR_B_COEFF      3950    // Beta coefficient of the thermistor.
+#define THERMISTOR_TEMP_NOM     25      // Nominal temperature of R0.
 
-#define LCD_ROWS        2
-#define LCD_COLUMNS     16
+#define SD_CARD_PIN             10
+#define RTC_PIN_1               4
+#define RTC_PIN_2               5
+#define LCD_PIN_RS              6
+#define LCD_PIN_EN              7
+#define LCD_PIN_DB4             8
+#define LCD_PIN_DB5             9
+#define LCD_PIN_DB6             11
+#define LCD_PIN_DB7             12
+
+#define LCD_ROWS                2
+#define LCD_COLUMNS             16
 
 #define RTC_TYPE        RTC_PCF8523
 
 
 // Other Compile-Time Constants
 
-#define MAX_LOG_FILES   1000
-#define MAX_DATA_FILES  1000
+#define MAX_LOG_FILES           1000
+#define MAX_DATA_FILES          1000
 
 
 // Globals
@@ -61,7 +69,7 @@ LiquidCrystal* lcd;
 DateTime now;
 char formatted_timestamp[] = "0000-00-00T00:00:00";
 char* data_file_entry_buffer = (char*) malloc(sizeof(char) * 50);
-unsigned int latest_temperature;
+double latest_temperature;
 
 /*
     DISPLAY MODES (ALL WITH LOGGING)
@@ -143,13 +151,28 @@ void update_formatted_timestamp() {
 
 void take_reading() {
     now = rtc.now();
-    // TODO: Take a temperature reading
+
+    latest_temperature = 0;
+
+    for (i = 0; i < NUM_SAMPLES; i++) {
+        latest_temperature += (double) analogRead(THERMISTOR_PIN);
+        delay(SAMPLE_DELAY);
+    }
+
+    // Formulas: T = 1/(1/B * ln(R/R_0) + (1/T0)) - 273.15 (celcius)
+    //           R = sr / (1023 / mean_of_samples - 1)
+    //           sr = thermistor series resistance
+
+    latest_temperature = THERMISTOR_SERIES_RES
+        / (1023 / (latest_temperature / NUM_SAMPLES) - 1); // Resistance
+    latest_temperature = 1 / ((log(latest_temperature / THERMISTOR_RES_NOM)
+        / THERMISTOR_B_COEFF) + 1/(THERMISTOR_TEMP_NOM + 273.15)) - 273.15;
 }
 
 void save_reading_to_card() {
     if (data_file) {
         update_formatted_timestamp();
-        sprintf(data_file_entry_buffer, "%u,%s", latest_temperature,
+        sprintf(data_file_entry_buffer, "%.2f,%s", latest_temperature,
             formatted_timestamp);
         data_file.println(data_file_entry_buffer);
     }
@@ -160,6 +183,11 @@ void save_reading_to_card() {
 
 void setup() {
     // TODO: Set up pins
+
+    // SET UP EXTERNAL ANALOG VOLTAGE REFERENCE
+    // Typically from 3.3V Arduino supply. This reduces the voltage noise seen
+    // from reading analog values.
+    analogReference(EXTERNAL);
 
     // INITIALIZE SD CARD
     log("Initializing SD card... ", false);
