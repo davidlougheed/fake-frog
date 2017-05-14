@@ -25,6 +25,7 @@
 #define DISPLAY_ENABLED         true    // Show menus and information on an LCD.
 #define NUM_SAMPLES             10      // Samples get averaged to reduce noise.
 #define SAMPLE_DELAY            10      // Milliseconds between samples.
+#define READING_INTERVAL        60      // Seconds between readings.
 
 
 // Hardware Settings
@@ -84,6 +85,7 @@ double latest_temperature;
 uint8_t display_mode = 0;
 
 uint16_t i; // 16-bit iterator
+uint8_t timer = 0; // Counts seconds
 
 
 // Utility Methods
@@ -286,12 +288,12 @@ void setup() {
 }
 
 void loop() {
-    // TODO: (Optional) Exit sleep
+    if (timer == READING_INTERVAL) {
+        timer = 0;
+        take_reading();
+        save_reading_to_card();
+    }
 
-    take_reading();
-    save_reading_to_card();
-
-    // TODO: (Optional) Enter sleep
-
+    timer++;
     delay(1000);
 }
