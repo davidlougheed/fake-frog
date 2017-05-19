@@ -29,6 +29,7 @@
 
 
 // Hardware Settings
+// - The data logging shield uses A4, A5, and digital pins 10, 11, 12, and 13.
 
 #define THERMISTOR_PIN          A0
 #define THERMISTOR_SERIES_RES   10000
@@ -62,14 +63,16 @@
 
 bool serial_logging_started = false;
 
+// - Files
 File log_file;
 File data_file;
 
+// - Hardware Objects
 RTC_TYPE rtc;
-
 LiquidCrystal* lcd;
 
-// To save memory, use global data point variables.
+// - Data Point Variables
+//   (to save memory, use global data point variables)
 DateTime now;
 char formatted_timestamp[] = "0000-00-00T00:00:00";
 char* data_file_entry_buffer = (char*) malloc(sizeof(char) * 50);
