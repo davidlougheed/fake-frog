@@ -224,10 +224,10 @@ void setup() {
         for (i = 0; i < MAX_LOG_FILES; i++) {
             // Increment until we can find a log file slot.
 
-            // Need to add 32 to get ASCII number characters.
-            log_file_name[6] = i / 100 + 32;
-            log_file_name[7] = i / 10 + 32;
-            log_file_name[8] = i % 10 + 32;
+            // Need to add 48 to get ASCII number characters.
+            log_file_name[4] = i / 100 + 48;
+            log_file_name[5] = i / 10 + 48;
+            log_file_name[6] = i % 10 + 48;
 
             if (!SD.exists(log_file_name)) {
                 log_file = SD.open(log_file_name, FILE_WRITE);
@@ -253,14 +253,14 @@ void setup() {
 
     // SET UP DATA FILE
     log("Creating data file...");
-    char data_file_name[] = "data_000.csv";
+    char data_file_name[] = "dat_000.csv";
     for (i = 0; i < MAX_DATA_FILES; i++) {
         // Increment until we can find a data file slot.
 
-        // Need to add 32 to get ASCII digit characters.
-        data_file_name[6] = i / 100 + 32;
-        data_file_name[7] = i / 10 + 32;
-        data_file_name[8] = i % 10 + 32;
+        // Need to add 48 to get ASCII digit characters.
+        data_file_name[4] = i / 100 + 48;
+        data_file_name[5] = i / 10 + 48;
+        data_file_name[6] = i % 10 + 48;
 
         if (!SD.exists(data_file_name)) {
             data_file = SD.open(data_file_name, FILE_WRITE);
