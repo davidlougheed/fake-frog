@@ -38,14 +38,14 @@
 #define THERMISTOR_TEMP_NOM     25      // Nominal temperature of R0.
 
 #define SD_CARD_PIN             10
-#define RTC_PIN_1               4
-#define RTC_PIN_2               5
-#define LCD_PIN_RS              6
-#define LCD_PIN_EN              7
-#define LCD_PIN_DB4             8
-#define LCD_PIN_DB5             9
-#define LCD_PIN_DB6             11
-#define LCD_PIN_DB7             12
+#define RTC_PIN_1               A4
+#define RTC_PIN_2               A5
+#define LCD_PIN_RS              4
+#define LCD_PIN_EN              5
+#define LCD_PIN_DB4             6
+#define LCD_PIN_DB5             7
+#define LCD_PIN_DB6             8
+#define LCD_PIN_DB7             9
 
 #define LCD_ROWS                2
 #define LCD_COLUMNS             16
