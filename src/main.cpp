@@ -90,6 +90,7 @@ uint8_t display_mode = 0;
 
 uint16_t i; // 16-bit iterator
 uint8_t timer = 0; // Counts seconds
+uint32_t milli_timer = 0; // Counts time taken to do a loop
 
 
 // Utility Methods
@@ -293,6 +294,7 @@ void setup() {
 }
 
 void loop() {
+    milli_timer = millis();
     if (timer == READING_INTERVAL) {
         timer = 0;
         take_reading();
@@ -300,5 +302,5 @@ void loop() {
     }
 
     timer++;
-    delay(1000);
+    delay(1000 - (millis() - milli_timer)); // 1 second between loops
 }
