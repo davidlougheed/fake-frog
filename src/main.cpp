@@ -95,6 +95,14 @@ uint32_t milli_timer = 0; // Counts time taken to do a loop
 
 // Utility Methods
 
+// Determine amount of free RAM.
+// - Retrieved 2017-05-19 (https://playground.arduino.cc/Code/AvailableMemory)
+int freeRam () {
+    extern int __heap_start, *__brkval;
+    int v;
+    return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
 // Log a generic message.
 void log(const char* msg, bool with_newline = true) {
     if (SERIAL_LOGGING) {
