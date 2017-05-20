@@ -31,7 +31,20 @@
 // Hardware Settings
 // - The data logging shield uses A4, A5, and digital pins 10, 11, 12, and 13.
 
-#define THERMISTOR_PIN          A0
+#define NUM_THERMISTORS         4
+
+#define THERMISTOR_1_PIN        0       // Analog pin
+#define THERMISTOR_2_PIN        1       // Analog pin
+#define THERMISTOR_3_PIN        2       // Analog pin
+#define THERMISTOR_4_PIN        3       // Analog pin
+
+const uint8_t thermistor_pins[NUM_THERMISTORS] = {
+    THERMISTOR_1_PIN,
+    THERMISTOR_2_PIN,
+    THERMISTOR_3_PIN,
+    THERMISTOR_4_PIN
+};
+
 #define THERMISTOR_SERIES_RES   10000
 #define THERMISTOR_RES_NOM      10000   // Nominal resistance, R0.
 #define THERMISTOR_B_COEFF      3950    // Beta coefficient of the thermistor.
@@ -75,10 +88,10 @@ LiquidCrystal* lcd;
 //   (to save memory, use global data point variables)
 DateTime now;
 char formatted_timestamp[] = "0000-00-00T00:00:00";
-char* temperature_string = (char*) malloc(sizeof(char) * 8);
 char* data_file_entry_buffer = (char*) malloc(sizeof(char) * 50);
-double latest_resistance;
-double latest_temperature;
+char temperature_string[4][8];
+double latest_resistance[4];
+double latest_temperature[4];
 
 /*
     DISPLAY MODES (ALL WITH LOGGING)
@@ -88,7 +101,7 @@ double latest_temperature;
 */
 uint8_t display_mode = 0;
 
-uint16_t i; // 16-bit iterator
+uint16_t i, z; // 16-bit iterator
 uint8_t timer = 0; // Counts seconds
 uint32_t milli_timer = 0; // Counts time taken to do a loop
 
@@ -185,22 +198,22 @@ double resistance_to_temperature(double resistance) {
         / (THERMISTOR_TEMP_NOM + 273.15)) - 273.15;
 }
 
-void take_reading() {
+void take_reading(uint8_t t) {
     now = rtc.now();
 
-    latest_resistance = 0;
+    latest_resistance[t] = 0;
 
     for (i = 0; i < NUM_SAMPLES; i++) {
-        latest_resistance += (double) analogRead(THERMISTOR_PIN);
+        latest_resistance[t] += (double) analogRead(thermistor_pins[t]);
         delay(SAMPLE_DELAY);
     }
 
     // Formulas: R = sr / (1023 / mean_of_samples - 1)
     //           sr = thermistor series resistance
 
-    latest_resistance = THERMISTOR_SERIES_RES
-        / (1023 / (latest_resistance / NUM_SAMPLES) - 1); // Resistance
-    latest_temperature = resistance_to_temperature(latest_resistance);
+    latest_resistance[t] = THERMISTOR_SERIES_RES
+        / (1023 / (latest_resistance[t] / NUM_SAMPLES) - 1); // Resistance
+    latest_temperature[t] = resistance_to_temperature(latest_resistance[t]);
 
     // TODO: Error calculations
 }
@@ -208,10 +221,24 @@ void take_reading() {
 void save_reading_to_card() {
     if (data_file) {
         update_formatted_timestamp();
-        dtostrf(latest_temperature, 5, 2, temperature_string);
-        sprintf(data_file_entry_buffer, "%s,%s", temperature_string,
-            formatted_timestamp);
-        data_file.println(data_file_entry_buffer);
+        for (i = 0; i < NUM_THERMISTORS; i++) {
+            dtostrf(latest_temperature[i], 5, 2, temperature_string[i]);
+        }
+
+        log("Took reading: ", false);
+        log(formatted_timestamp, false); log(",", false);
+        log(temperature_string[0], false); log(",", false);
+        log(temperature_string[1], false); log(",", false);
+        log(temperature_string[2], false); log(",", false);
+        log(temperature_string[3]);
+        log_flush();
+
+        data_file.print(formatted_timestamp); data_file.print(",");
+        data_file.print(temperature_string[0]); data_file.print(",");
+        data_file.print(temperature_string[1]); data_file.print(",");
+        data_file.print(temperature_string[2]); data_file.print(",");
+        data_file.println(temperature_string[3]);
+        // data_file.println(data_file_entry_buffer);
         data_file.flush();
     }
 }
@@ -292,7 +319,7 @@ void setup() {
     }
 
     // PRINT DATA FILE CSV HEADERS
-    data_file.println("Timestamp,Temperature");
+    data_file.println("Timestamp,Temp1,Temp2,Temp3,Temp4");
     data_file.flush();
 
     // SET UP LCD
@@ -315,7 +342,9 @@ void loop() {
     milli_timer = millis();
     if (timer == READING_INTERVAL) {
         timer = 0;
-        take_reading();
+        for (z = 0; z < NUM_THERMISTORS; z++) { // Loop through all thermistors
+            take_reading(z);
+        }
         save_reading_to_card();
     }
 
