@@ -96,7 +96,7 @@ double latest_temperature[4];
 /*
     DISPLAY MODES (ALL WITH LOGGING)
     0: Idle
-    1: Information (clock, space usage)
+    1: Information (RAM free)
     2: RTC Editor
 */
 uint8_t display_mode = 0;
@@ -167,13 +167,14 @@ void update_display() {
         lcd->clear();
 
         switch (display_mode) {
-            case 1:
+            case 1:     // Information
+                lcd->print("Free RAM: ");
+                lcd->print(freeRAM(), 10);
+                break;
+            case 2:     // RTC Editor
                 lcd->print("TBD");
                 break;
-            case 2:
-                lcd->print("TBD");
-                break;
-            case 0:
+            case 0:     // Idle
             default:
                 break;
         }
