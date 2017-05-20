@@ -160,7 +160,8 @@ void log_error(const char* msg, bool with_newline = true) {
     while (true); // Loop forever
 }
 
-void update_screen() {
+// Update the LCD to display latest values for the set display mode.
+void update_display() {
     if (DISPLAY_ENABLED && lcd) {
         lcd->clear();
 
@@ -178,9 +179,10 @@ void update_screen() {
     }
 }
 
+// Switch the display mode, triggering a display update.
 void switch_display_mode(uint8_t m) {
     display_mode = m;
-    update_screen();
+    update_display();
 }
 
 
