@@ -51,8 +51,8 @@ const uint8_t thermistor_pins[NUM_THERMISTORS] = {
 #define THERMISTOR_TEMP_NOM     25      // Nominal temperature of R0.
 
 #define SD_CARD_PIN             10
-#define RTC_PIN_1               A4
-#define RTC_PIN_2               A5
+#define RTC_PIN_1               A4      // Analog pin
+#define RTC_PIN_2               A5      // Analog pin
 #define LCD_PIN_RS              4
 #define LCD_PIN_EN              5
 #define LCD_PIN_DB4             6
