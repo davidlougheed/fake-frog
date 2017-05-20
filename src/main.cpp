@@ -139,7 +139,6 @@ void log(const char* msg, bool with_newline = true) {
             } else {
                 log_file.print(msg);
             }
-            log_file.flush();
         }
     }
 }
@@ -157,6 +156,7 @@ void log_flush() {
 // Log an error message. Uses standard log method, then hangs forever.
 void log_error(const char* msg, bool with_newline = true) {
     log(msg, with_newline);
+    log_flush();
     while (true); // Loop forever
 }
 
@@ -336,6 +336,7 @@ void setup() {
     log(formatted_timestamp, false);
     log(". Software version: ", false);
     log(VERSION);
+    log_flush();
 }
 
 void loop() {
