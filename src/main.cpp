@@ -188,7 +188,7 @@ void switch_display_mode(uint8_t m) {
 
 // Update the global formatted timestamp string with the contents of 'now'.
 void update_formatted_timestamp() {
-    sprintf(formatted_timestamp, "%u-%u-%uT%u:%u:%u", now.year(),
+    sprintf(formatted_timestamp, "%04u-%02u-%02uT%02u:%02u:%02u", now.year(),
         now.month(), now.day(), now.hour(), now.minute(), now.second());
 }
 
@@ -297,7 +297,7 @@ void setup() {
     // TODO: Calibrate RTC
 
     // SET UP DATA FILE
-    log("Creating data file...");
+    log("Creating data file...", false);
     char data_file_name[] = "dat_000.csv";
     for (i = 0; i < MAX_DATA_FILES; i++) {
         // Increment until we can find a data file slot.
