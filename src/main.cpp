@@ -183,7 +183,7 @@ void update_display() {
 
 // Switch the display mode, triggering a display update.
 void switch_display_mode(uint8_t m) {
-    display_mode = m;
+    display_mode = m % 3;
     update_display();
 }
 
