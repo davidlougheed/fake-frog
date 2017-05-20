@@ -342,8 +342,9 @@ void setup() {
 }
 
 void loop() {
+    // Time the loop to make sure it runs rounded to the nearest second.
     milli_timer = millis();
-    if (timer == READING_INTERVAL) {
+    if (timer >= READING_INTERVAL) {
         timer = 0;
         for (z = 0; z < NUM_THERMISTORS; z++) { // Loop through all thermistors
             take_reading(z);
@@ -351,6 +352,12 @@ void loop() {
         save_reading_to_card();
     }
 
+    milli_timer = millis() - milli_timer;
+    while (milli_timer >= 1000) {
+        // Prevent an integer overflow error by making sure milli_timer < 1000
+        timer++; // An extra second has occurred - don't let it slip away!
+        milli_timer -= 1000;
+    }
     timer++;
-    delay(1000 - (millis() - milli_timer)); // 1 second between loops
+    delay(1000 - milli_timer); // 1 second between loops
 }
