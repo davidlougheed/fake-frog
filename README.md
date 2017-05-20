@@ -1,6 +1,8 @@
 # `fake-frog`
 
 An Arduino-based project to build a frog-shaped temperature logger.
+Contains code adapted from https://github.com/adafruit/Light-and-Temp-logger
+and https://learn.adafruit.com/thermistor/using-a-thermistor.
 
 ## Created Files
 
