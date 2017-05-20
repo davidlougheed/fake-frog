@@ -104,6 +104,7 @@ uint8_t display_mode = 0;
 uint16_t i, z; // 16-bit iterator
 uint8_t timer = 0; // Counts seconds
 uint32_t milli_timer = 0; // Counts time taken to do a loop
+uint32_t uptime = 0;
 
 
 // Utility Methods
@@ -359,5 +360,6 @@ void loop() {
         milli_timer -= 1000;
     }
     timer++;
-    delay(1000 - milli_timer); // 1 second between loops
+    uptime++;
+    delay(1000 - milli_timer); // (Ideally) 1 second between loops
 }
