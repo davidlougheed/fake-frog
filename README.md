@@ -23,8 +23,8 @@ problems.
 The data file is in CSV format. In general, a data file will look like this:
 
 ```
-Timestamp,Temperature
-0000-00-00T00:00:00,##.##
-0000-00-00T00:00:00,##.##
+Timestamp,Temp1,Temp2,Temp3,Temp4
+0000-00-00T00:00:00,##.##,##.##,##.##,##.##
+0000-00-00T00:00:00,##.##,##.##,##.##,##.##
 ...
 ```
