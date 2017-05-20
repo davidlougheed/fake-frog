@@ -123,6 +123,16 @@ void log(const char* msg, bool with_newline = true) {
     }
 }
 
+// Flush various logging buffers.
+void log_flush() {
+    if (SERIAL_LOGGING) {
+        Serial.flush();
+    }
+    if (FILE_LOGGING) {
+        log_file.flush();
+    }
+}
+
 // Log an error message. Uses standard log method, then hangs forever.
 void log_error(const char* msg, bool with_newline = true) {
     log(msg, with_newline);
