@@ -380,6 +380,8 @@ void setup() {
         lcd = new LiquidCrystal(LCD_PIN_RS, LCD_PIN_EN, LCD_PIN_DB4,
             LCD_PIN_DB5, LCD_PIN_DB6, LCD_PIN_DB7);
         lcd->begin(LCD_COLUMNS, LCD_ROWS);
+
+        update_display();
     }
 
     // Finished everything!
