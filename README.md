@@ -8,7 +8,7 @@ and https://learn.adafruit.com/thermistor/using-a-thermistor.
 
 Upon startup, the logger will create one or two files: a data file and
 (optionally) a log file.  The default file name formats for these are
-`data_###.csv` and `log_###.txt`, where `###` is a number (meaning
+`dat_###.csv` and `log_###.txt`, where `###` is a number (meaning
 there are can be up to 1000 log files and data files created).
 
 ### Log File
