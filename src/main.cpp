@@ -298,7 +298,56 @@ void setup() {
     }
     log("Done.");
 
-    // TODO: Calibrate RTC
+    // INPUT RTC TIME
+    if (SERIAL_LOGGING) {
+        uint16_t year;
+        uint8_t month, day, hour, minute, second;
+
+        Serial.print("Change clock? (y/n) ");
+        while (Serial.available() < 1);
+        if (Serial.read() == 'y') {
+            Serial.println();
+            Serial.print("Enter Year: ");
+            while (Serial.available() < 4);
+            year += (Serial.read() - 48) * 1000;
+            year += (Serial.read() - 48) * 100;
+            year += (Serial.read() - 48) * 10;
+            year += (Serial.read() - 48);
+            Serial.println(year);
+
+            Serial.print("Enter Month: ");
+            while (Serial.available() < 2);
+            month += (Serial.read() - 48) * 10;
+            month += (Serial.read() - 48);
+            Serial.println(month);
+
+            Serial.print("Enter Day: ");
+            while (Serial.available() < 2);
+            day += (Serial.read() - 48) * 10;
+            day += (Serial.read() - 48);
+            Serial.println(day);
+
+            Serial.print("Enter Hour: ");
+            while (Serial.available() < 2);
+            hour += (Serial.read() - 48) * 10;
+            hour += (Serial.read() - 48);
+            Serial.println(hour);
+
+            Serial.print("Enter Minute: ");
+            while (Serial.available() < 2);
+            minute += (Serial.read() - 48) * 10;
+            minute += (Serial.read() - 48);
+            Serial.println(minute);
+
+            Serial.print("Enter Second: ");
+            while (Serial.available() < 2);
+            second += (Serial.read() - 48) * 10;
+            second += (Serial.read() - 48);
+            Serial.println(second);
+
+            rtc.adjust(DateTime(year, month, day, hour, minute, second));
+        }
+    }
 
     // SET UP DATA FILE
     log("Creating data file...", false);
