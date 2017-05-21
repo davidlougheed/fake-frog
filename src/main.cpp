@@ -50,6 +50,8 @@ const uint8_t thermistor_pins[NUM_THERMISTORS] = {
 #define THERMISTOR_B_COEFF      3950    // Beta coefficient of the thermistor.
 #define THERMISTOR_TEMP_NOM     25      // Nominal temperature of R0.
 
+#define BUTTON_1_PIN            2
+#define BUTTON_2_PIN            3
 #define SD_CARD_PIN             10
 #define RTC_PIN_1               A4      // Analog pin
 #define RTC_PIN_2               A5      // Analog pin
@@ -105,6 +107,9 @@ uint16_t i, z; // 16-bit iterator
 uint8_t timer = 0; // Counts seconds
 uint32_t milli_timer = 0; // Counts time taken to do a loop
 uint32_t uptime = 0;
+
+bool button_1 = false;
+bool button_2 = false;
 
 
 // Utility Methods
@@ -251,8 +256,6 @@ void save_reading_to_card() {
 // Main Methods
 
 void setup() {
-    // TODO: Set up pins
-
     // SET UP EXTERNAL ANALOG VOLTAGE REFERENCE
     // Typically from 3.3V Arduino supply. This reduces the voltage noise seen
     // from reading analog values.
@@ -383,6 +386,10 @@ void setup() {
 
         update_display();
     }
+
+    // SET UP BUTTONS
+    pinMode(BUTTON_1_PIN, INPUT);
+    pinMode(BUTTON_2_PIN, INPUT);
 
     // Finished everything!
     now = rtc.now();
