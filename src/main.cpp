@@ -107,6 +107,7 @@ uint16_t i, z; // 16-bit iterator
 uint8_t timer = 0; // Counts seconds
 uint32_t milli_timer = 0; // Counts time taken to do a loop
 uint32_t uptime = 0;
+uint8_t cursor = 0; // Maximum: 31 (second row, last column)
 
 bool button_1 = false;
 bool button_2 = false;
@@ -170,17 +171,22 @@ void log_error(const char* msg, bool with_newline = true) {
 void update_display() {
     if (DISPLAY_ENABLED && lcd) {
         lcd->clear();
+        cursor = 0;
 
         switch (display_mode) {
             case 1:     // Information
                 lcd->print("Free RAM: ");
                 lcd->print(freeRAM(), 10);
+                lcd->noBlink();
                 break;
             case 2:     // RTC Editor
                 lcd->print("TBD");
+                lcd->setCursor(0, 0);
+                lcd->blink();
                 break;
             case 0:     // Idle
             default:
+                lcd->noBlink();
                 break;
         }
     }
