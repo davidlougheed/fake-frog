@@ -90,7 +90,6 @@ LiquidCrystal* lcd;
 //   (to save memory, use global data point variables)
 DateTime now;
 char formatted_timestamp[] = "0000-00-00T00:00:00";
-char* data_file_entry_buffer = (char*) malloc(sizeof(char) * 50);
 char temperature_string[4][8];
 double latest_resistance[4];
 double latest_temperature[4];
@@ -253,7 +252,6 @@ void save_reading_to_card() {
         data_file.print(temperature_string[1]); data_file.print(",");
         data_file.print(temperature_string[2]); data_file.print(",");
         data_file.println(temperature_string[3]);
-        // data_file.println(data_file_entry_buffer);
         data_file.flush();
     }
 }
