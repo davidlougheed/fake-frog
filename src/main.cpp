@@ -284,7 +284,7 @@ void setup() {
 
             // Need to add 48 to get ASCII number characters.
             log_file_name[4] = i / 100 + 48;
-            log_file_name[5] = i / 10 + 48;
+            log_file_name[5] = i / 10 % 10 + 48;
             log_file_name[6] = i % 10 + 48;
 
             if (!SD.exists(log_file_name)) {
@@ -366,7 +366,7 @@ void setup() {
 
         // Need to add 48 to get ASCII digit characters.
         data_file_name[4] = i / 100 + 48;
-        data_file_name[5] = i / 10 + 48;
+        data_file_name[5] = i / 10 % 10 + 48;
         data_file_name[6] = i % 10 + 48;
 
         if (!SD.exists(data_file_name)) {
