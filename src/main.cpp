@@ -418,6 +418,18 @@ void loop() {
         save_reading_to_card();
     }
 
+    button_1 = digitalRead(BUTTON_1_PIN);
+    button_2 = digitalRead(BUTTON_2_PIN);
+
+    if (button_1 && button_2) {
+        switch_display_mode(++display_mode);
+    } else if (button_1) {
+
+    } else if (button_2) {
+        cursor = (cursor + 1) % 32;
+        lcd->setCursor(cursor % 16, cursor > 15 ? 1 : 0);
+    }
+
     milli_timer = millis() - milli_timer;
     while (milli_timer >= 1000) {
         // Prevent an integer overflow error by making sure milli_timer < 1000
