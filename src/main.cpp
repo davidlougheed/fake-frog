@@ -300,7 +300,7 @@ void setup() {
     }
 
     // SET UP RTC
-    log("Initializing RTC...", false);
+    log("Initializing RTC... ", false);
     Wire.begin();
     if (!rtc.begin()) {
         log_error("Failed.");
@@ -314,6 +314,7 @@ void setup() {
 
         Serial.print("Change clock? (y/n) ");
         while (Serial.available() < 1);
+        Serial.println();
         if (Serial.read() == 'y') {
             Serial.println();
             Serial.print("Enter Year: ");
@@ -359,7 +360,7 @@ void setup() {
     }
 
     // SET UP DATA FILE
-    log("Creating data file...", false);
+    log("Creating data file... ", false);
     char data_file_name[] = "dat_000.csv";
     for (i = 0; i < MAX_DATA_FILES; i++) {
         // Increment until we can find a data file slot.
