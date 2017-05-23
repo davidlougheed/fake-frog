@@ -23,7 +23,7 @@
 #define SERIAL_LOGGING          true    // Log to the serial display for debug.
 #define FILE_LOGGING            true    // Log to file on SD card. (recommended)
 #define DISPLAY_ENABLED         true    // Show menus and information on an LCD.
-#define NUM_SAMPLES             10      // Samples get averaged to reduce noise.
+#define NUM_SAMPLES             20      // Samples get averaged to reduce noise.
 #define SAMPLE_DELAY            10      // Milliseconds between samples.
 #define READING_INTERVAL        60      // Seconds between readings.
 
