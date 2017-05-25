@@ -65,7 +65,7 @@ const uint8_t thermistor_pins[NUM_THERMISTORS] = {
 #define LCD_ROWS                2
 #define LCD_COLUMNS             16
 
-#define RTC_TYPE                RTC_PCF8523
+#define RTC_TYPE                RTC_DS1307
 
 
 // Other Compile-Time Constants
